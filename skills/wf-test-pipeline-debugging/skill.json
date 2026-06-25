@@ -1,0 +1,60 @@
+{
+  "name": "wf-test-pipeline-debugging",
+  "version": "1.0.0",
+  "display_name": "WF 测试管线排查",
+  "description": "wfgen 到 wfusion 再到告警 sink 的集成测试链路排查",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "debugging",
+    "testing",
+    "wf-rules"
+  ],
+  "triggers": {
+    "keywords": [
+      "wf-rules",
+      "test/run.sh",
+      "wfgen",
+      "没有告警",
+      "data/alerts",
+      "building sink",
+      "no sinks configured",
+      "event_time",
+      "close 模式",
+      "invalid ip literal"
+    ],
+    "patterns": [
+      "没有.*告警",
+      "alerts.*为空",
+      "wfgen.*wfusion",
+      "测试管线",
+      "sink.*构建",
+      "规则.*不触发"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wfusion",
+        "description": "Warp Fusion runtime CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      },
+      {
+        "name": "wfgen",
+        "description": "Warp Fusion test data generator",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}

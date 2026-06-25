@@ -1,0 +1,53 @@
+{
+  "name": "wf-wfs-authoring",
+  "version": "1.0.0",
+  "display_name": "WFS Schema 编写",
+  "description": "Warp Fusion window schema 编写、类型契约检查与 stream/time/over 排障",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "schema",
+    "wfs",
+    "rule-authoring"
+  ],
+  "triggers": {
+    "keywords": [
+      "WFS",
+      ".wfs",
+      "window schema",
+      "schema",
+      "stream",
+      "over = 0",
+      "event_time",
+      "field not found",
+      "type mismatch"
+    ],
+    "patterns": [
+      "写.*wfs",
+      "修改.*schema",
+      "window.*schema",
+      "字段.*类型",
+      "告警窗口"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wfl",
+        "description": "Warp Fusion rule lint and explain CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}

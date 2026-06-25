@@ -1,0 +1,54 @@
+{
+  "name": "wf-config-authoring",
+  "version": "1.0.0",
+  "display_name": "Warp Fusion 配置",
+  "description": "wfusion.toml 编写、source/sink/runtime/window 配置与常见配置排障",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "configuration",
+    "toml",
+    "runtime"
+  ],
+  "triggers": {
+    "keywords": [
+      "wfusion.toml",
+      "WarpFusion 配置",
+      "wfusion config",
+      "data_format",
+      "arrow_framed",
+      "tcp source",
+      "file source",
+      "port",
+      "stream",
+      "framing"
+    ],
+    "patterns": [
+      "写.*wfusion.toml",
+      "配置.*wfusion",
+      "source.*配置",
+      "data_format.*错误",
+      "stream.*配置"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wfusion",
+        "description": "Warp Fusion runtime CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}

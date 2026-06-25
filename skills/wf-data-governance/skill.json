@@ -1,0 +1,57 @@
+{
+  "name": "wf-data-governance",
+  "version": "1.0.0",
+  "display_name": "Warp Fusion 数据治理",
+  "description": "WPL/OML 适配、字段归一化与 WFS 数据契约对齐",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "data-governance",
+    "wpl",
+    "oml"
+  ],
+  "triggers": {
+    "keywords": [
+      "Warp Fusion 数据治理",
+      "WPL",
+      "OML",
+      "字段归一",
+      "DATA_CONTRACT",
+      "stream 不一致",
+      "类型不匹配",
+      "规则不触发"
+    ],
+    "patterns": [
+      "WPL.*WFS.*对齐",
+      "字段.*归一",
+      "数据.*契约",
+      "stream.*不一致",
+      "规则.*不触发"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wparse",
+        "description": "WarpParse parser and sender",
+        "url": "https://get.warpparse.ai"
+      },
+      {
+        "name": "wfl",
+        "description": "Warp Fusion rule lint and explain CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}

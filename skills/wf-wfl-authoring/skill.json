@@ -1,0 +1,54 @@
+{
+  "name": "wf-wfl-authoring",
+  "version": "1.0.0",
+  "display_name": "WFL 规则编写",
+  "description": "Warp Fusion 检测规则编写、lint、schema 对齐与规则排障",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "wfl",
+    "rule-authoring",
+    "detection-engineering"
+  ],
+  "triggers": {
+    "keywords": [
+      "WFL",
+      ".wfl",
+      "rules",
+      "match",
+      "on each",
+      "yield",
+      "limits",
+      "score",
+      "wfl lint",
+      "规则不触发"
+    ],
+    "patterns": [
+      "写.*wfl",
+      "修改.*规则",
+      "检测规则",
+      "规则.*lint",
+      "规则.*不触发"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wfl",
+        "description": "Warp Fusion rule lint and explain CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}
