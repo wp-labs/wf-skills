@@ -131,11 +131,11 @@ grep 'no sinks configured' data/wfusion.log      # 有 = 布局错，启动失�
 ### Step 2：数据流进来了吗？
 
 ```bash
-grep 'frame decoded' data/wfusion.log | grep -oE 'stream="[^"]+"' | sort | uniq -c
+grep 'frame decoded' data/wfusion.log | grep -oE 'stream_tag="[^"]+"|stream="[^"]+"' | sort | uniq -c
 ```
 
 - 没有 frame → wfgen 没发 / TCP 没连上 / 帧格式错（见 `wf-config-authoring`）。
-- 只有部分 stream → wfgen 场景轮转未到（`stream` 模式按 `--interval` 串行轮场景）。
+- 只有部分 stream tag → wfgen 场景轮转未到（`stream` 模式按 `--interval` 串行轮场景），或 payload 的 `wp_oml_name` / source `stream_tag_field` 与 WFS `stream_tag` 不一致。
 - 有 frame 但 `route report dropped_late>0` → event_time 是秒级（见规则 3）。
 
 ### Step 3：规则匹配了吗？

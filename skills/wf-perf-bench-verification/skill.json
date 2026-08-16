@@ -1,0 +1,62 @@
+{
+  "name": "wf-perf-bench-verification",
+  "version": "1.0.0",
+  "display_name": "WF 性能基准测量与正确性验证",
+  "description": "nexmark 性能基准测量纪律（口径/交错/相位配对）与规则引擎输出正确性验证（ground truth 模拟器 + 逐 alert 对拍）",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "benchmarking",
+    "verification",
+    "nexmark"
+  ],
+  "triggers": {
+    "keywords": [
+      "nexmark",
+      "bench.sh",
+      "EPS",
+      "吞吐",
+      "RSS",
+      "ground truth",
+      "对拍",
+      "正确性验证",
+      "metrics.ndjson",
+      "emitted_total",
+      "append_total",
+      "A/B",
+      "相位",
+      "verify_ground_truth"
+    ],
+    "patterns": [
+      "验证.*(正确性|输出)",
+      "性能.*(测试|基准|对比)",
+      "差.*%.*(输出|告警)",
+      "跑.*bench"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wfusion",
+        "description": "Warp Fusion runtime CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      },
+      {
+        "name": "wfgen",
+        "description": "Warp Fusion test data generator",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}

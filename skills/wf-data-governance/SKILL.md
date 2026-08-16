@@ -1,6 +1,6 @@
 ---
 name: wf-data-governance
-description: Warp Fusion 数据治理、WPL/OML 适配与字段归一化指南。用于编写或诊断 WPL/OML 适配器、核对上游数据是否满足 WFS window schema 契约、处理字段命名/类型/枚举/stream 不一致导致的规则不触发问题。
+description: Warp Fusion 数据治理、WPL/OML 适配与字段归一化指南。用于编写或诊断 WPL/OML 适配器、核对上游数据是否满足 WFS window schema 契约、处理字段命名/类型/枚举/stream tag 不一致导致的规则不触发问题。
 ---
 
 # AI Agent 指南：数据治理（WPL/OML 适配与归一化）
@@ -23,7 +23,7 @@ description: Warp Fusion 数据治理、WPL/OML 适配与字段归一化指南�
 1. **先看契约，再写适配**：对照 `DATA_CONTRACT.md` 的字段表，确认每个必填字段都有来源
 2. **类型先于内容**：`digit` 必须是整数、`ip` 必须是合法 IP——类型错了，再对的规则也匹配不上
 3. **枚举归一、不可省略**：`result` 只能是 `success`/`failed`（小写），`action` 只能是 `syn`/`established`/`fin`/`reset`
-4. **流名一致**：wpl 产出的流名 = wfs schema 的 `stream` = wfusion source 配置的 `stream`
+4. **流 tag 一致**：wparse OML 名称 / `wp_oml_name` = wfusion source 动态 `stream_tag_field` 读取值 = WFS `stream_tag`
 
 ## WPL 适配器写法
 
@@ -121,9 +121,9 @@ service = "ssh"
 dip = host_ip  // 从 syslog hostname DNS 解析或配置注入
 ```
 
-## OML 包声明
+## OML 包声明与流 tag
 
-OML 将 WPL 解析出的字段集合声明为一个"包"，并指定流名：
+OML 将 WPL 解析出的字段集合声明为一个"包"：
 
 ```
 package /nginx/ {
@@ -131,7 +131,9 @@ package /nginx/ {
 }
 ```
 
-产出流的字段名按 WPL 的命名决定。流名由 wparse 的 sink 配置决定——WPL 包名与流名是独立的。
+产出字段名按 WPL 的命名决定。面向 Warp Fusion 时，推荐由 warp-parse 输出 `wp_oml_name` 字段，值取 OML name；wfusion source 用 `stream_tag_field = "wp_oml_name"` 从 payload 读取动态 tag；WFS window 用 `stream_tag = "<同一个值>"` 订阅。
+
+Arrow framed 输出不需要 payload 字段承载 tag，帧 tag 自身就是路由 tag；JSON/NDJSON/CSV 输出则需要 `wp_oml_name` 这类字段承载动态 tag。
 
 ## 字段归一化清单
 
@@ -190,14 +192,14 @@ wpl 产出 sip = "10.0.0.1:22"  → schema `sip: ip` → 类型不匹配
 
 **✅ 正确**：ip 类型字段只取 IP 部分，端口独立为 `dport`。
 
-### ❌ 错误 3：流名不一致
+### ❌ 错误 3：stream tag 不一致
 
 ```
-wpl 产出流名 "conn_events"
-wfs schema stream = "netflow"      → 数据进不了窗口
+wparse JSON 产出 wp_oml_name = "conn_events"
+wfs schema stream_tag = "netflow"      → 数据进不了窗口
 ```
 
-**✅ 正确**：wpl 流名、schema `stream`、wfusion source `stream` 三者一致。
+**✅ 正确**：`wp_oml_name` 的值、schema `stream_tag`、wfusion source 的固定/动态 routing 配置三者一致。
 
 ### ❌ 错误 4：时间格式不兼容
 

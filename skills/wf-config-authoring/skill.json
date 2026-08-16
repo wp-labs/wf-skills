@@ -25,6 +25,8 @@
       "tcp source",
       "file source",
       "port",
+      "stream_tag",
+      "stream_tag_field",
       "stream",
       "framing"
     ],
@@ -33,7 +35,8 @@
       "配置.*wfusion",
       "source.*配置",
       "data_format.*错误",
-      "stream.*配置"
+      "stream.*配置",
+      "stream_tag.*配置"
     ]
   },
   "dependencies": {

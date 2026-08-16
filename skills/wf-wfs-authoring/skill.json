@@ -2,7 +2,7 @@
   "name": "wf-wfs-authoring",
   "version": "1.0.0",
   "display_name": "WFS Schema 编写",
-  "description": "Warp Fusion window schema 编写、类型契约检查与 stream/time/over 排障",
+  "description": "Warp Fusion window schema 编写、类型契约检查与 stream_tag/time/over 排障",
   "author": "wp-labs",
   "license": "MIT",
   "platforms": [
@@ -21,6 +21,7 @@
       ".wfs",
       "window schema",
       "schema",
+      "stream_tag",
       "stream",
       "over = 0",
       "event_time",

@@ -1,6 +1,6 @@
 ---
 name: wf-wfs-authoring
-description: Warp Fusion WFS window schema 编写与检查指南。用于创建、修改或诊断 `.wfs` 文件，核对 window、stream、time、over、fields 类型契约，以及处理字段名、字段类型、事件时间和告警窗口配置问题。
+description: Warp Fusion WFS window schema 编写与检查指南。用于创建、修改或诊断 `.wfs` 文件，核对 window、stream_tag、time、over、fields 类型契约，以及处理字段名、字段类型、事件时间和告警窗口配置问题。
 ---
 
 # AI Agent 指南：WFS Window Schema 编写
@@ -14,7 +14,7 @@ description: Warp Fusion WFS window schema 编写与检查指南。用于创建�
 
 // === 数据窗口（供规则消费） ===
 window conn_events {
-    stream = "netflow"       // 接收的流名
+    stream_tag = "netflow"   // 订阅的逻辑流 tag
     time = event_time        // 事件时间字段
     over = 30m               // 窗口大小（数据保留时长）
     fields {
@@ -58,19 +58,20 @@ window network_alerts {
 
 **类型匹配比命名更重要**：`digit` 字段必须解析为整数，`ip` 必须可解析为合法 IPv4/IPv6。
 
-### 3. `stream` — 流名
+### 3. `stream_tag` — 逻辑流 tag
 
 ```wfs
 window auth_events {
-    stream = "auth"          // 接收名为 "auth" 的流
+    stream_tag = "auth"      // 订阅 tag 为 "auth" 的数据
     ...
 }
 ```
 
 **规则：**
-- 流的"名称"由上游（wparse/sink）决定
-- schema 的 `stream` 必须与上游发送的流名一致
-- 一个流可以被多个 window 订阅（指向同一个数据源）
+- 流 tag 由上游（wparse/wfusion source）决定
+- schema 的 `stream_tag` 必须与上游投递 tag 一致
+- 一个 tag 可以被多个 window 订阅（指向同一个数据源）
+- 输出 window 通常不写 `stream_tag`，只写 `over = 0`
 
 ### 4. `over` — 窗口大小
 
@@ -112,7 +113,7 @@ window conn_events {
 
 ```wfs
 window conn_events {
-    stream = "netflow"
+    stream_tag = "netflow"
     time = event_time
     over = 30m
     fields {
@@ -147,14 +148,14 @@ window network_alerts {
 
 ```wfs
 window auth_events {
-    stream = "auth"
+    stream_tag = "auth"
     time = event_time
     over = 10m
     fields { sip: ip, user: chars, result: chars, event_time: time }
 }
 
 window conn_events {
-    stream = "netflow"
+    stream_tag = "netflow"
     time = event_time
     over = 30m
     fields { sip: ip, dip: ip, dport: digit, bytes_out: digit, event_time: time }
@@ -190,11 +191,11 @@ fields {
 
 **✅ 正确**：先确认上游数据格式，再写 schema。参考 `wf-rules/DATA_CONTRACT.md`。
 
-### ❌ 错误 3：`stream` 名与上游不一致
+### ❌ 错误 3：`stream_tag` 与上游不一致
 
 ```wfs
 window conn_events {
-    stream = "netflow"    // wfs 写 "netflow"
+    stream_tag = "netflow"    // wfs 写 "netflow"
 }
 ```
 

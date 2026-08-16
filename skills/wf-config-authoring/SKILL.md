@@ -1,6 +1,6 @@
 ---
 name: wf-config-authoring
-description: Warp Fusion 配置编写与排障指南。用于创建、修改或检查 `wfusion.toml`、source/sink/runtime/window/logging 配置，尤其是 TCP/file source、data_format、stream、port、framing、路径和 config render 问题。
+description: Warp Fusion 配置编写与排障指南。用于创建、修改或检查 `wfusion.toml`、source/sink/runtime/window/logging 配置，尤其是 TCP/file source、data_format、stream_tag、stream_tag_field、port、framing、路径和 config render 问题。
 ---
 
 # AI Agent 指南：WarpFusion 配置
@@ -47,31 +47,36 @@ data_format = "arrow_framed"
 listen = "tcp://127.0.0.1:9800"
 ```
 
-### 4. `stream` 的必填 / 可选规则
+### 4. `stream_tag` / `stream_tag_field` 的必填 / 可选规则
 
-| `data_format` | `stream` 必填？ | 原因 |
+| `data_format` | 路由配置 | 原因 |
 |---|---|---|
-| `ndjson` | **必填** | 纯文本，数据中无 stream 标识 |
-| `arrow_ipc` | **必填** | 原始 IPC Stream，无 tag 头 |
-| `arrow_framed` | **可选** | 帧头中的 tag 就是 stream 名；留空则用 tag |
+| `ndjson` | 固定 `stream_tag`，或动态 `stream_tag_field` | JSON payload 可承载 tag 字段 |
+| `csv` | 固定 `stream_tag`，或动态 `stream_tag_field` | CSV payload 可承载 tag 字段 |
+| `arrow_ipc` | **必须配置 `stream_tag`** | 原始 IPC Stream 无 tag 头 |
+| `arrow_framed` | 可省略 | 帧头中的 tag 就是 stream tag；也可用 `stream_tag` 覆盖 |
 
 ```toml
-# arrow_framed + stream 为空 → 用帧 tag 路由
-stream = ""
+# arrow_framed 不写 stream_tag → 用帧 tag 路由
 data_format = "arrow_framed"
 
-# ndjson → stream 必填
-stream = "syslog"
+# ndjson → 固定 tag
+stream_tag = "syslog"
+data_format = "ndjson"
+
+# ndjson → 动态 tag；warp-parse OML 默认字段名是 wp_oml_name
+stream_tag_field = "wp_oml_name"
 data_format = "ndjson"
 ```
 
 ## data_format 语义
 
-| 值 | 线格式 | stream 来源 | 典型发送方 |
+| 值 | 线格式 | stream tag 来源 | 典型发送方 |
 |---|---|---|---|
-| `ndjson` | JSON Lines 文本 | `stream` 参数（必填） | 手写 / wfgen |
-| `arrow_ipc` | 原始 Arrow IPC Stream (schema + batch + EOS) | `stream` 参数（必填） | 第三方 Arrow 工具 |
-| `arrow_framed` | wp_arrow 帧 `[4B tag_len][tag][Arrow IPC Stream]` | 帧内 tag，或 `stream` 覆盖 | **wparse** `encode_ipc(tag, batch)` |
+| `ndjson` | JSON Lines 文本 | 固定 `stream_tag`，或 `stream_tag_field` 从 payload 读取 | 手写 / wfgen / wparse JSON |
+| `csv` | CSV 文本 | 固定 `stream_tag`，或 `stream_tag_field` 从 payload 读取 | 文件回放 |
+| `arrow_ipc` | 原始 Arrow IPC Stream (schema + batch + EOS) | `stream_tag` 参数（必填） | 第三方 Arrow 工具 |
+| `arrow_framed` | wp_arrow 帧 `[4B tag_len][tag][Arrow IPC Stream]` | 帧内 tag，或 `stream_tag` 覆盖 | **wparse** `encode_ipc(tag, batch)` |
 
 ## TCP source 完整参数
 
@@ -82,8 +87,8 @@ name = "ingress"
 addr = "127.0.0.1"            # 绑定地址，默认 0.0.0.0
 port = "9800"                 # 端口（字符串），默认 9000
 framing = "len"               # len | line | auto
-data_format = "arrow_framed"  # ndjson | arrow_ipc | arrow_framed
-stream = ""                   # 可选
+data_format = "arrow_framed"  # ndjson | csv | arrow_ipc | arrow_framed
+stream_tag = ""               # 可选：固定覆盖；留空/省略则用帧 tag
 ```
 
 `framing` 控制字节级分帧：
@@ -98,7 +103,7 @@ stream = ""                   # 可选
 type = "file"
 name = "seed"
 path = "data/events.ndjson"   # 相对 config dir 或 --work-dir
-stream = "syslog"             # 路由 stream 名
+stream_tag = "syslog"         # 固定路由 tag
 data_format = "ndjson"        # ndjson | csv | arrow_framed | arrow_ipc
 ```
 
@@ -175,7 +180,7 @@ wfusion config diff -c base.toml --to-config overlay.toml
 1. `data_format` 是否拼写正确？（不是 `format`）
 2. `port` 是否是字符串？
 3. TCP source 是否用了 `addr`+`port`？（不是 `listen`）
-4. `stream` 是否填写？（`ndjson`/`arrow_ipc` 必填）
-5. `arrow_framed` 的 tag 是否匹配 `.wfs` 中 window 的 `stream` 声明？
+4. `stream_tag` / `stream_tag_field` 是否填写？（`arrow_ipc` 必须固定 `stream_tag`；`ndjson`/`csv` 需要固定或动态 tag）
+5. `arrow_framed` 的帧 tag 是否匹配 `.wfs` 中 window 的 `stream_tag` 声明？
 6. 路径是否相对 config dir？需要用 `${WORK_DIR}` 还是 `${CONFIG_DIR}`？
 7. 运行 `wfusion config render -c <path>` 检查最终合并后的配置。
