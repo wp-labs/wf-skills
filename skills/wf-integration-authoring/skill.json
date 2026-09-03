@@ -1,0 +1,71 @@
+{
+  "name": "wf-integration-authoring",
+  "version": "1.0.0",
+  "display_name": "Warp Fusion 产品集成（5 步接入）",
+  "description": "把 WarpFusion 作为检测子系统接入自有产品的五步集成法（①数据来源→②输入窗口→③告警输出窗口→④告警输出路由→⑤计算规则）、工程目录接线与端到端验证（wfl lint/test + wfusion batch），附最小可跑工程对照",
+  "author": "wp-labs",
+  "license": "MIT",
+  "platforms": [
+    "codex",
+    "claude-code"
+  ],
+  "categories": [
+    "warp-fusion",
+    "integration",
+    "onboarding",
+    "topology",
+    "detection"
+  ],
+  "triggers": {
+    "keywords": [
+      "WarpFusion 接入",
+      "WarpFusion 集成",
+      "集成指南",
+      "integration",
+      "hello_detection",
+      "5 步",
+      "数据来源",
+      "输入窗口",
+      "输出窗口",
+      "告警输出",
+      "sink 路由",
+      "topology",
+      "file source",
+      "alerts.ndjson",
+      "最小工程",
+      "stream_tag 对齐",
+      "照抄可跑",
+      "检测任务"
+    ],
+    "patterns": [
+      "接入.*WarpFusion",
+      "WarpFusion.*接入",
+      "集成.*(引擎|WarpFusion)",
+      "把.*(系统|数据|告警).*(接|集成).*",
+      "搭.*检测任务",
+      "照抄.*工程",
+      "集成指南"
+    ]
+  },
+  "dependencies": {
+    "optional": [
+      {
+        "name": "wfusion",
+        "description": "Warp Fusion runtime CLI",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      },
+      {
+        "name": "wfl",
+        "description": "Warp Fusion rule developer tools (lint/test/replay)",
+        "url": "https://github.com/wp-labs/warp-fusion"
+      }
+    ]
+  },
+  "resources": {
+    "github": "https://github.com/wp-labs",
+    "docs": "https://github.com/wp-labs/warp-fusion/blob/alpha/docs/useage/integration.md"
+  },
+  "files": {
+    "skill": "SKILL.md"
+  }
+}

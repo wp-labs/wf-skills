@@ -19,6 +19,7 @@ Installs into `~/.claude/skills` or `~/.codex/skills` depending on platform dete
 | `wf-wfl-authoring` | Author, review, and lint `.wfl` detection rules |
 | `wf-config-authoring` | Create and troubleshoot `wfusion.toml` runtime configuration |
 | `wf-test-pipeline-debugging` | Debug wf-rules test pipelines from `wfgen` through `wfusion` alert sinks |
+| `wf-integration-authoring` | 把 WarpFusion 接入自有系统的五步集成法（数据来源→输入窗→告警输出窗→输出路由→规则），工程接线与端到端验证 |
 
 ## Skill Structure
 
